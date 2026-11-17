@@ -27,6 +27,12 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#f6f8f6] px-6 py-10">
       <div className="mx-auto flex max-w-5xl flex-col gap-10">
+        <header className="text-center">
+          <h1 className="text-2xl font-bold text-emerald-950">
+            Prototipo de Reportes — Campus Soyapango
+          </h1>
+        </header>
+
         {/* Vista de Nuevo Reporte (Rama MV242667) */}
         <ListaReportes />
 
