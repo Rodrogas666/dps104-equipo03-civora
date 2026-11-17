@@ -14,7 +14,6 @@ export const ReporteCard: React.FC<ReporteCardProps> = ({ reporte }) => {
   const { titulo, ubicacion, tiempo, estado, categoria, imagenUrl } = reporte;
   const [imgSrc, setImgSrc] = useState(imagenUrl || IMAGEN_FALLBACK);
 
-  // Renderizado condicional según el estado del reporte (Rúbrica B2)
   const obtenerEstiloEstado = () => {
     if (estado === 'En proceso') {
       return { backgroundColor: '#FDE8CC', color: '#8A5300' };

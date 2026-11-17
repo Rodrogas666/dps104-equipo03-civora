@@ -1,6 +1,5 @@
 import TarjetaReporte, { CategoriaItem, ReporteProps } from "./TarjetaReporte";
 
-// Listado tipado de categorías con id único
 const listaCategorias: CategoriaItem[] = [
   { id: 1, nombre: "Infraestructura / Baches" },
   { id: 2, nombre: "Infraestructura / Iluminación" },
@@ -8,7 +7,6 @@ const listaCategorias: CategoriaItem[] = [
   { id: 4, nombre: "Mobiliario / Aulas" },
 ];
 
-// B3. Arreglo tipado (con 1 solo reporte para mostrar solo una tarjeta en pantalla)
 const reportes: ReporteProps[] = [
   {
     id: 1,
@@ -25,7 +23,6 @@ const reportes: ReporteProps[] = [
 export default function ListaReportes() {
   return (
     <section className="flex justify-center">
-      {/* B3. Recorrido con .map() usando key={reporte.id} */}
       {reportes.map((reporte) => (
         <TarjetaReporte
           key={reporte.id}
