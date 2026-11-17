@@ -28,7 +28,7 @@ export default function TarjetaReporte({
       {/* Encabezado: < Nuevo reporte */}
       <header className="mb-4 flex items-center gap-2 text-emerald-950">
         <span className="text-lg font-bold">‹</span>
-        <h2 className="text-base font-bold">Nuevo reporte</h2>
+        <h2 className="text-base font-bold">Reporte</h2>
       </header>
 
       {/* Pasos: 1 Detalles | 2 Ubicación */}
