@@ -72,7 +72,7 @@ export default function TarjetaReporte({
           )}
 
           <span className="text-xs font-semibold text-[#165a38]">
-            📷 {tieneFoto ? "Cambiar foto" : "Subir foto"}
+             {tieneFoto ? "Cambiar foto" : "Subir foto"}
           </span>
         </div>
       </div>
