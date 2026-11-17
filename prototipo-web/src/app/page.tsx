@@ -33,10 +33,8 @@ export default function Home() {
           </h1>
         </header>
 
-        {/* Vista de Nuevo Reporte (Rama MV242667) */}
         <ListaReportes />
 
-        {/* Vista de Tarjetas de Reporte (Rama PA242675) */}
         <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
           {REPORTES.map((reporte) => (
             <ReporteCard key={reporte.id} reporte={reporte} />

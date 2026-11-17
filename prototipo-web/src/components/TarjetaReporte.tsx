@@ -1,10 +1,8 @@
-// Interface para cada categoría del select (con id para key={cat.id})
 export interface CategoriaItem {
   id: number;
   nombre: string;
 }
 
-// B2. Interface tipada para las props de la tarjeta
 export interface ReporteProps {
   id: number;
   categoriaSeleccionada: string;
@@ -25,13 +23,11 @@ export default function TarjetaReporte({
 }: ReporteProps) {
   return (
     <article className="w-full max-w-sm rounded-3xl border border-emerald-900/10 bg-[#f8faf7] p-6 shadow-md">
-      {/* Encabezado: < Nuevo reporte */}
       <header className="mb-4 flex items-center gap-2 text-emerald-950">
         <span className="text-lg font-bold">‹</span>
         <h2 className="text-base font-bold">Reporte</h2>
       </header>
 
-      {/* Pasos: 1 Detalles | 2 Ubicación */}
       <div className="mb-4 flex gap-2 text-xs font-semibold">
         <span className="rounded-full bg-[#165a38] px-3 py-1 text-white">
           1 Detalles
@@ -41,7 +37,6 @@ export default function TarjetaReporte({
         </span>
       </div>
 
-      {/* Título principal del bloque */}
       <h3 className="text-xl font-bold text-emerald-950">
         Cuéntanos qué sucede
       </h3>
@@ -49,7 +44,6 @@ export default function TarjetaReporte({
         Una foto y una ubicación nos ayudan a atenderlo.
       </p>
 
-      {/* Foto del problema + Condicional requerido en B2 */}
       <div className="mt-4 flex items-center gap-4">
         <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl bg-emerald-900/10 text-2xl">
           {tieneFoto ? "🛣️" : "📷"}
@@ -60,7 +54,6 @@ export default function TarjetaReporte({
             Foto del problema *
           </span>
 
-          {/* Condicional: muestra estado según tieneFoto */}
           {tieneFoto ? (
             <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-900">
               1 foto adjunta
@@ -77,7 +70,6 @@ export default function TarjetaReporte({
         </div>
       </div>
 
-      {/* Categoría * (recibe el listado de categorías por props con key por id) */}
       <div className="mt-4">
         <label className="mb-1 block text-xs font-bold text-emerald-950">
           Categoría *
@@ -94,7 +86,6 @@ export default function TarjetaReporte({
         </select>
       </div>
 
-      {/* Título * (input interactivo para poder escribir) */}
       <div className="mt-3">
         <label className="mb-1 block text-xs font-bold text-emerald-950">
           Título *
@@ -107,7 +98,6 @@ export default function TarjetaReporte({
         />
       </div>
 
-      {/* Descripción * (textarea interactivo para poder escribir) */}
       <div className="mt-3">
         <label className="mb-1 block text-xs font-bold text-emerald-950">
           Descripción *
@@ -120,10 +110,9 @@ export default function TarjetaReporte({
         />
       </div>
 
-      {/* Bloque de Ubicación */}
       <div className="mt-4 flex items-center justify-between rounded-2xl bg-emerald-100/70 px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <span className="text-base">📍</span>
+          <span className="text-base"></span>
           <div>
             <p className="text-xs font-bold text-emerald-950">{ubicacion}</p>
             <p className="text-[11px] text-emerald-800">
@@ -134,7 +123,6 @@ export default function TarjetaReporte({
         <span className="font-bold text-emerald-900">›</span>
       </div>
 
-      {/* Botón Enviar reporte */}
       <button
         type="button"
         className="mt-5 w-full rounded-xl bg-[#165a38] py-3 text-sm font-semibold text-white hover:bg-emerald-900"
