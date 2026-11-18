@@ -25,7 +25,7 @@ export default function TarjetaReporte({
     <article className="w-full max-w-sm rounded-3xl border border-emerald-900/10 bg-[#f8faf7] p-6 shadow-md">
       <header className="mb-4 flex items-center gap-2 text-emerald-950">
         <span className="text-lg font-bold">‹</span>
-        <h2 className="text-base font-bold">Nuevo reporte</h2>
+        <h2 className="text-base font-bold">Reporte</h2>
       </header>
 
       <div className="mb-4 flex gap-2 text-xs font-semibold">
