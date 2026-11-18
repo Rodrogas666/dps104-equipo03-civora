@@ -95,8 +95,8 @@
 }
 
 .estado-reporte {
-  background-color: #dbeafe;
-  color: #1d4ed8;
+  background-color: #e1ffe8;
+  color: #80e4a9;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 12px;
@@ -128,8 +128,8 @@
 
 /* Información de seguimiento */
 .siguiente-paso {
-  background-color: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background-color: #e1ffe8;
+  border: 1px solid #80e4a9;
   border-radius: 12px;
   padding: 18px;
   text-align: left;
@@ -137,7 +137,7 @@
 }
 
 .siguiente-paso h3 {
-  color: #1e40af;
+  color: #708b5e;
   font-size: 16px;
   margin: 0 0 8px;
 }
@@ -155,7 +155,7 @@
   padding: 14px;
   border: none;
   border-radius: 8px;
-  background-color: #2563eb;
+  background-color: #5bd175;
   color: #ffffff;
   font-size: 15px;
   font-weight: bold;
@@ -164,7 +164,7 @@
 }
 
 .boton-inicio:hover {
-  background-color: #1d4ed8;
+  background-color: #187518;
 }
 
 /* Pie de página */
@@ -178,10 +178,10 @@
 .boton-ver-reporte {
   width: 100%;
   padding: 13px;
-  border: 2px solid #2563eb;
+  border: 2px solid #5bd175;
   border-radius: 8px;
   background-color: transparent;
-  color: #2563eb;
+  color: #5bd175;
   font-size: 15px;
   font-weight: bold;
   cursor: pointer;
@@ -189,7 +189,7 @@
 }
 
 .boton-ver-reporte:hover {
-  background-color: #2563eb;
+  background-color: #5bd175;
   color: #ffffff;
 }
 
