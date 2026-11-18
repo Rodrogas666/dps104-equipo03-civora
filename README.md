@@ -7,7 +7,7 @@ Prototipo web desarrollado en **React / Next.js** con **TypeScript** para el reg
 - **Rodrigo Pineda**
 - **Rafael Escorcia**
 
-## Estructura del Prototipo (`prototipo-web`)
+## Estructura del Prototipo
 - `src/components/TarjetaReporte.tsx`: Componente de tarjeta de formulario para crear un nuevo reporte recibiendo datos y categorías mediante `props` tipadas.
 - `src/components/ListaReportes.tsx`: Componente contenedor con arreglo tipado que renderiza el reporte mediante `.map()`.
 - `src/components/ReporteCard.tsx`: Componente de tarjeta para visualizar reportes registrados y su estado condicional.
@@ -15,7 +15,6 @@ Prototipo web desarrollado en **React / Next.js** con **TypeScript** para el reg
 
 ## Ejecución
 ```bash
-cd prototipo-web
 npm install
 npm run dev
 ```
