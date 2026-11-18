@@ -1,0 +1,9 @@
+# Prototipo web (Lab Fase 1). Las reglas generales están en el .gitignore de la raíz.
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
