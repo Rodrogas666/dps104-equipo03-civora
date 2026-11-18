@@ -1,11 +1,213 @@
 /* Identifica el tipo de problema reportado */
-.tipo-reporte {
-  display: inline-block;
-  background-color: #edf3e9;
-  color: #24664e;
-  padding: 6px 9px;
-  border-radius: 7px;
-  font-size: 11px;
+
+/* Contenedor principal */
+.confirmacion-container {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  color: #263238;
+}
+
+/* Encabezado */
+.confirmacion-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px 8%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.confirmacion-header h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.icono-regresar {
+  font-size: 32px;
+  cursor: pointer;
+  color: #263238;
+}
+
+/* Contenido */
+.confirmacion-contenido {
+  width: 90%;
+  max-width: 550px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+/* Icono de éxito */
+.icono-exito {
+  width: 75px;
+  height: 75px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background-color: #dcfce7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icono-exito span {
+  font-size: 42px;
   font-weight: bold;
-  margin: 0 0 10px;
+  color: #16a34a;
+}
+
+.confirmacion-contenido h1 {
+  font-size: 28px;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.mensaje-confirmacion {
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Tarjeta de información del reporte */
+.detalle-reporte {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 22px;
+  text-align: left;
+  margin-bottom: 20px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+}
+
+.reporte-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  font-weight: bold;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.estado-reporte {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.tipo-reporte {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.detalle-reporte h3 {
+  font-size: 19px;
+  margin: 8px 0;
+  color: #1e293b;
+}
+
+.reporte-ubicacion {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.reporte-fecha {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 15px;
+}
+
+/* Información de seguimiento */
+.siguiente-paso {
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.siguiente-paso h3 {
+  color: #1e40af;
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.siguiente-paso p {
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Botón volver al inicio */
+.boton-inicio {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background-color: #2563eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton-inicio:hover {
+  background-color: #1d4ed8;
+}
+
+/* Pie de página */
+.confirmacion-footer {
+  width: 90%;
+  max-width: 550px;
+  margin: 0 auto 35px;
+  text-align: center;
+}
+
+.boton-ver-reporte {
+  width: 100%;
+  padding: 13px;
+  border: 2px solid #2563eb;
+  border-radius: 8px;
+  background-color: transparent;
+  color: #2563eb;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.boton-ver-reporte:hover {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+/* Diseño adaptable a móviles */
+@media (max-width: 600px) {
+  .confirmacion-header {
+    padding: 16px 5%;
+  }
+
+  .confirmacion-contenido {
+    margin: 30px auto;
+  }
+
+  .confirmacion-contenido h1 {
+    font-size: 24px;
+  }
+
+  .detalle-reporte {
+    padding: 17px;
+  }
 }
