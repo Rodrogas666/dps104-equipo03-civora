@@ -12,6 +12,12 @@ dist/
 web-build/
 .expo/
 .expo-shared/
+.kotlin/
+*.orig.*
+.metro-health-check*
+/ios
+/android
+example
 coverage/
 *.tsbuildinfo
 next-env.d.ts
