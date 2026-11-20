@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -12,27 +12,36 @@ import {
 } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { ModalPosibleDuplicado } from '@/components/reportes/ModalPosibleDuplicado';
 import { SelectorCategoriaNuevoReporte } from '@/components/reportes/SelectorCategoriaNuevoReporte';
 import { SelectorFotoReporte } from '@/components/reportes/SelectorFotoReporte';
 import { SelectorUbicacionReporte } from '@/components/reportes/SelectorUbicacionReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
-import type { CategoriaReporte, DatosNuevoReporte } from '@/types/reportes';
+import {
+  obtenerUbicacionBorrador,
+  registrarReporteEnviado,
+  suscribirUbicacionBorrador,
+} from '@/services/estadoBorradorReporte';
+import { obtenerFotoReporteActual, suscribirFotoReporte } from '@/services/estadoFotoReporte';
+import type { CategoriaReporte, DatosNuevoReporte, ReporteVecinal } from '@/types/reportes';
 
 export interface NuevoReporteProps {
   alVolver?: () => void;
   alEnviarReporte?: (datos: DatosNuevoReporte) => void;
 }
 
-const FOTO_INICIAL = REPORTES_EJEMPLO_RESIDENCIAL[0]?.imagenUrl ?? null;
-
 export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
   const insets = useSafeAreaInsets();
-  const [fotoUrl] = useState<string | null>(FOTO_INICIAL);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(() => obtenerFotoReporteActual());
   const [categoria, setCategoria] = useState<CategoriaReporte>('bache');
-  const [ubicacion, setUbicacion] = useState('Pasaje 5, Polígono C');
+  const [ubicacion, setUbicacion] = useState(() => obtenerUbicacionBorrador());
   const [descripcion, setDescripcion] = useState('');
+  const [reporteDuplicado, setReporteDuplicado] = useState<ReporteVecinal | null>(null);
+
+  useEffect(() => suscribirFotoReporte(setFotoUrl), []);
+  useEffect(() => suscribirUbicacionBorrador(setUbicacion), []);
 
   const manejarVolver = () => {
     if (alVolver) {
@@ -46,18 +55,30 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
     }
   };
 
-  const manejarCambiarFoto = () => {
-    // TODO: Integrar expo-image-picker / cámara en fase de servicios
-  };
-
-  const manejarEnvio = () => {
+  const confirmarEnvioFinal = () => {
+    const ubicacionLimpia = ubicacion.trim();
+    setReporteDuplicado(null);
+    registrarReporteEnviado(categoria, ubicacionLimpia);
     alEnviarReporte?.({
       fotoUrl,
       categoria,
-      ubicacion: ubicacion.trim(),
+      ubicacion: ubicacionLimpia,
       descripcion: descripcion.trim(),
     });
-    manejarVolver();
+    router.replace('/reporte-enviado');
+  };
+
+  const manejarPresionarEnviar = () => {
+    const posibleDuplicado = REPORTES_EJEMPLO_RESIDENCIAL.find(
+      (item) => item.estado !== 'resuelto' && item.categoria === categoria
+    );
+
+    if (posibleDuplicado) {
+      setReporteDuplicado(posibleDuplicado);
+      return;
+    }
+
+    confirmarEnvioFinal();
   };
 
   return (
@@ -101,7 +122,7 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
             <View className="mt-6 gap-6">
               <SelectorFotoReporte
                 fotoUrl={fotoUrl}
-                alCambiarFoto={manejarCambiarFoto}
+                alCambiarFoto={() => router.push('/tomar-foto')}
               />
 
               <SelectorCategoriaNuevoReporte
@@ -111,7 +132,7 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
 
               <SelectorUbicacionReporte
                 ubicacion={ubicacion}
-                alCambiarUbicacion={setUbicacion}
+                alAbrirMapa={() => router.push('/ubicacion-reporte')}
               />
 
               <View className="w-full">
@@ -135,9 +156,20 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
           <View
             className="border-t border-civora-border/60 bg-civora-card px-6 pt-4"
             style={{ paddingBottom: Math.max(insets.bottom, 20) }}>
-            <BotonPrincipal texto="Enviar reporte" onPress={manejarEnvio} />
+            <BotonPrincipal texto="Enviar reporte" onPress={manejarPresionarEnviar} />
           </View>
         </View>
+
+        <ModalPosibleDuplicado
+          visible={Boolean(reporteDuplicado)}
+          reporteSimilar={reporteDuplicado}
+          alVerEseReporte={() => {
+            setReporteDuplicado(null);
+            router.replace('/inicio');
+          }}
+          alEnviarDeTodosModos={confirmarEnvioFinal}
+          alCancelar={() => setReporteDuplicado(null)}
+        />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

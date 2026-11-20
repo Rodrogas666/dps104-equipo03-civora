@@ -2,6 +2,8 @@ export const ColoresCivora = {
   primary: '#176449',
   primaryDark: '#12503A',
   darkPill: '#183D31',
+  cameraBg: '#0E281F',
+  cameraSurface: '#15382C',
   accent: '#E0F3A7',
   accentDark: '#D1E98A',
   background: '#F6F8F4',
