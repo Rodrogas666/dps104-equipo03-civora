@@ -1,26 +1,33 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView, Text, View } from 'react-native';
 
-import { AuthHeader } from '@/components/auth/AuthHeader';
-import { LoginForm } from '@/components/auth/LoginForm';
-import { RegisterForm } from '@/components/auth/RegisterForm';
-import type { SegmentedOption } from '@/components/ui/SegmentedControl';
-import type { AuthMode, LoginFormValues, RegisterFormValues } from '@/types/auth';
+import { EncabezadoAccesoCivora } from '@/components/autenticacion/EncabezadoAccesoCivora';
+import { FormularioInicioSesion } from '@/components/autenticacion/FormularioInicioSesion';
+import { FormularioRegistroUsuario } from '@/components/autenticacion/FormularioRegistroUsuario';
+import type { OpcionPestana } from '@/components/ui/SelectorPestanas';
+import type {
+  DatosInicioSesion,
+  DatosRegistroUsuario,
+  ModoAutenticacion,
+} from '@/types/autenticacion';
 
-const AUTH_OPTIONS: SegmentedOption<AuthMode>[] = [
-  { label: 'Iniciar sesión', value: 'login' },
-  { label: 'Crear cuenta', value: 'register' },
+const OPCIONES_ACCESO: OpcionPestana<ModoAutenticacion>[] = [
+  { etiqueta: 'Iniciar sesión', valor: 'inicioSesion' },
+  { etiqueta: 'Crear cuenta', valor: 'registro' },
 ];
 
-export function AuthScreen() {
-  const [mode, setMode] = useState<AuthMode>('login');
+export function PantallaAccesoUsuario() {
+  const [modoActual, setModoActual] = useState<ModoAutenticacion>('inicioSesion');
 
-  const handleLogin = (_values: LoginFormValues) => {
+  const manejarInicioSesion = (_datos: DatosInicioSesion) => {
     // TODO: Conectar inicio de sesión con src/services/
+    router.replace('/inicio');
   };
 
-  const handleRegister = (_values: RegisterFormValues) => {
-    // TODO: Conectar registro con src/services/
+  const manejarRegistro = (_datos: DatosRegistroUsuario) => {
+    // TODO: Conectar registro de usuario con src/services/
+    router.replace('/inicio');
   };
 
   return (
@@ -28,7 +35,6 @@ export function AuthScreen() {
       className="flex-1 bg-civora-bg"
       contentContainerClassName="min-h-screen flex-grow items-center justify-center p-4 md:p-8">
       <View className="w-full max-w-4xl overflow-hidden rounded-3xl border border-civora-border bg-civora-card shadow-sm lg:flex-row">
-        {/* Panel lateral de marca (visible en pantallas de escritorio) */}
         <View className="hidden justify-between bg-civora-primary p-10 lg:flex lg:w-5/12">
           <View>
             <Text className="text-4xl font-bold tracking-tight text-white">civora</Text>
@@ -57,34 +63,35 @@ export function AuthScreen() {
           </Text>
         </View>
 
-        {/* Panel del formulario */}
         <View className="w-full bg-civora-bg p-6 sm:p-10 lg:w-7/12">
           <View className="lg:hidden">
-            <AuthHeader compact={mode === 'register'} />
+            <EncabezadoAccesoCivora compacto={modoActual === 'registro'} />
           </View>
 
           <View className="mb-6 hidden lg:flex">
             <Text className="text-2xl font-bold text-civora-text">
-              {mode === 'login' ? 'Bienvenido de vuelta' : 'Crea tu cuenta de vecino'}
+              {modoActual === 'inicioSesion'
+                ? 'Bienvenido de vuelta'
+                : 'Crea tu cuenta de vecino'}
             </Text>
             <Text className="mt-1 text-sm text-civora-muted">
-              {mode === 'login'
+              {modoActual === 'inicioSesion'
                 ? 'Ingresa con tu correo y contraseña para continuar.'
                 : 'Completa tus datos para reportar incidencias en tu residencial.'}
             </Text>
           </View>
 
-          {mode === 'login' ? (
-            <LoginForm
-              authOptions={AUTH_OPTIONS}
-              onModeChange={setMode}
-              onSubmit={handleLogin}
+          {modoActual === 'inicioSesion' ? (
+            <FormularioInicioSesion
+              opcionesModo={OPCIONES_ACCESO}
+              alCambiarModo={setModoActual}
+              alEnviar={manejarInicioSesion}
             />
           ) : (
-            <RegisterForm
-              authOptions={AUTH_OPTIONS}
-              onModeChange={setMode}
-              onSubmit={handleRegister}
+            <FormularioRegistroUsuario
+              opcionesModo={OPCIONES_ACCESO}
+              alCambiarModo={setModoActual}
+              alEnviar={manejarRegistro}
             />
           )}
         </View>

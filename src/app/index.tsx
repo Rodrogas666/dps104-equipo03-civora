@@ -1,5 +1,5 @@
-import { AuthScreen } from '@/screens/auth/AuthScreen';
+import { PantallaAccesoUsuario } from '@/screens/autenticacion/PantallaAccesoUsuario';
 
 export default function Index() {
-  return <AuthScreen />;
+  return <PantallaAccesoUsuario />;
 }

@@ -1,31 +1,31 @@
 import type { ComponentRef, Ref } from 'react';
 import { Text, TextInput, View, type TextInputProps } from 'react-native';
 
-import { Colors } from '@/constants/colors';
+import { ColoresCivora } from '@/constants/coloresCivora';
 
-export type InputRef = ComponentRef<typeof TextInput>;
+export type ReferenciaCampoTexto = ComponentRef<typeof TextInput>;
 
-interface InputProps extends TextInputProps {
-  ref?: Ref<InputRef>;
-  label: string;
+interface CampoTextoFormularioProps extends TextInputProps {
+  ref?: Ref<ReferenciaCampoTexto>;
+  etiqueta: string;
   error?: string;
   containerClassName?: string;
 }
 
-export function Input({
+export function CampoTextoFormulario({
   ref,
-  label,
+  etiqueta,
   error,
   containerClassName = '',
   className = '',
   ...props
-}: InputProps) {
+}: CampoTextoFormularioProps) {
   return (
     <View className={`w-full ${containerClassName}`}>
-      <Text className="mb-1.5 text-sm font-semibold text-civora-text">{label}</Text>
+      <Text className="mb-1.5 text-sm font-semibold text-civora-text">{etiqueta}</Text>
       <TextInput
         ref={ref}
-        placeholderTextColor={Colors.placeholder}
+        placeholderTextColor={ColoresCivora.placeholder}
         className={`w-full rounded-2xl border bg-civora-card px-4 py-3.5 text-base text-civora-text outline-none focus:border-civora-primary ${
           error ? 'border-red-500' : 'border-civora-border'
         } ${className}`}
