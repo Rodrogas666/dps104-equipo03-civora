@@ -1,18 +1,16 @@
 import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BannerReportarProblema } from '@/components/reportes/BannerReportarProblema';
-import { BarraNavegacionInferior } from '@/components/reportes/BarraNavegacionInferior';
 import { FiltrosReportesResidencial } from '@/components/reportes/FiltrosReportesResidencial';
 import { TarjetaResumenReporte } from '@/components/reportes/TarjetaResumenReporte';
+import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
-import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
 import type {
   CategoriaReporte,
   FiltroEstadoReporte,
-  PestanaInferiorCivora,
   ReporteVecinal,
 } from '@/types/reportes';
 
@@ -20,6 +18,9 @@ export interface CreacionDeReportesProps {
   nombreResidencial?: string;
   inicialUsuario?: string;
   reportes?: ReporteVecinal[];
+  cargando?: boolean;
+  error?: string | null;
+  alReintentar?: () => void;
   alPresionarReportar?: () => void;
   alSeleccionarReporte?: (reporte: ReporteVecinal) => void;
   alPresionarPerfil?: () => void;
@@ -28,7 +29,10 @@ export interface CreacionDeReportesProps {
 export function CreacionDeReportes({
   nombreResidencial = 'Residencial Las Palmas',
   inicialUsuario = 'V',
-  reportes = REPORTES_EJEMPLO_RESIDENCIAL,
+  reportes = [],
+  cargando = false,
+  error = null,
+  alReintentar,
   alPresionarReportar,
   alSeleccionarReporte,
   alPresionarPerfil,
@@ -37,7 +41,6 @@ export function CreacionDeReportes({
     null
   );
   const [estadoSeleccionado, setEstadoSeleccionado] = useState<FiltroEstadoReporte>('todos');
-  const [pestanaActiva, setPestanaActiva] = useState<PestanaInferiorCivora>('inicio');
 
   const reportesFiltrados = useMemo(() => {
     return reportes.filter((reporte) => {
@@ -48,13 +51,6 @@ export function CreacionDeReportes({
       return coincideCategoria && coincideEstado;
     });
   }, [reportes, categoriaSeleccionada, estadoSeleccionado]);
-
-  const manejarCambioPestana = (pestana: PestanaInferiorCivora) => {
-    setPestanaActiva(pestana);
-    if (pestana === 'reportar') {
-      alPresionarReportar?.();
-    }
-  };
 
   return (
     <SafeAreaView
@@ -109,7 +105,17 @@ export function CreacionDeReportes({
           />
 
           <View className="mt-4 gap-3.5">
-            {reportesFiltrados.length > 0 ? (
+            {cargando ? (
+              <View className="items-center py-10">
+                <ActivityIndicator color={ColoresCivora.primary} />
+                <Text className="mt-3 text-xs text-civora-muted">Cargando reportes…</Text>
+              </View>
+            ) : error ? (
+              <View className="gap-3 rounded-2xl border border-civora-border bg-civora-card px-6 py-6">
+                <Text className="text-sm text-civora-text">{error}</Text>
+                {alReintentar ? <BotonPrincipal texto="Reintentar" onPress={alReintentar} /> : null}
+              </View>
+            ) : reportesFiltrados.length > 0 ? (
               reportesFiltrados.map((reporte) => (
                 <TarjetaResumenReporte
                   key={reporte.id}
@@ -129,11 +135,6 @@ export function CreacionDeReportes({
             )}
           </View>
         </ScrollView>
-
-        <BarraNavegacionInferior
-          pestanaActiva={pestanaActiva}
-          alCambiarPestana={manejarCambioPestana}
-        />
       </View>
     </SafeAreaView>
   );

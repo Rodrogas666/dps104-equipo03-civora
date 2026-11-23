@@ -1,20 +1,17 @@
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EtiquetaEstadoReporte } from '@/components/reportes/EtiquetaEstadoReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
-import {
-  obtenerUltimoReporteEnviado,
-  type ResumenReporteEnviado,
-  suscribirUltimoReporteEnviado,
-} from '@/services/estadoBorradorReporte';
+import { useReportes } from '@/context/ReportesContext';
+import type { ReporteVecinal } from '@/types/reportes';
 
 export interface ConfirmacionReporteEnviadoProps {
-  alVerMiReporte?: (reporte: ResumenReporteEnviado) => void;
+  alVerMiReporte?: (reporte: ReporteVecinal) => void;
   alVolverAlInicio?: () => void;
 }
 
@@ -23,11 +20,12 @@ export function ConfirmacionReporteEnviado({
   alVolverAlInicio,
 }: ConfirmacionReporteEnviadoProps) {
   const insets = useSafeAreaInsets();
-  const [reporte, setReporte] = useState<ResumenReporteEnviado>(() =>
-    obtenerUltimoReporteEnviado()
-  );
+  const { ultimoCreado: reporte } = useReportes();
 
-  useEffect(() => suscribirUltimoReporteEnviado(setReporte), []);
+  // Si se abre esta pantalla sin haber enviado un reporte, vuelve al inicio.
+  useEffect(() => {
+    if (!reporte) router.replace('/inicio');
+  }, [reporte]);
 
   const manejarVolverAlInicio = () => {
     if (alVolverAlInicio) {
@@ -38,12 +36,15 @@ export function ConfirmacionReporteEnviado({
   };
 
   const manejarVerReporte = () => {
+    if (!reporte) return;
     if (alVerMiReporte) {
       alVerMiReporte(reporte);
       return;
     }
     router.replace('/inicio');
   };
+
+  if (!reporte) return null;
 
   return (
     <SafeAreaView

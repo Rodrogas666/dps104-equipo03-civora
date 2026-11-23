@@ -18,12 +18,9 @@ import { SelectorFotoReporte } from '@/components/reportes/SelectorFotoReporte';
 import { SelectorUbicacionReporte } from '@/components/reportes/SelectorUbicacionReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
-import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
-import {
-  obtenerUbicacionBorrador,
-  registrarReporteEnviado,
-  suscribirUbicacionBorrador,
-} from '@/services/estadoBorradorReporte';
+import { useReportes } from '@/context/ReportesContext';
+import { obtenerUbicacionBorrador, suscribirUbicacionBorrador } from '@/services/estadoBorradorReporte';
+import { buscarPosibleDuplicado } from '@/services/reportesService';
 import { obtenerFotoReporteActual, suscribirFotoReporte } from '@/services/estadoFotoReporte';
 import type { CategoriaReporte, DatosNuevoReporte, ReporteVecinal } from '@/types/reportes';
 
@@ -34,6 +31,9 @@ export interface NuevoReporteProps {
 
 export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
   const insets = useSafeAreaInsets();
+  const { reportes, crear } = useReportes();
+  const [enviando, setEnviando] = useState(false);
+  const [errorEnvio, setErrorEnvio] = useState<string | null>(null);
   const [fotoUrl, setFotoUrl] = useState<string | null>(() => obtenerFotoReporteActual());
   const [categoria, setCategoria] = useState<CategoriaReporte>('bache');
   const [ubicacion, setUbicacion] = useState(() => obtenerUbicacionBorrador());
@@ -55,30 +55,37 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
     }
   };
 
-  const confirmarEnvioFinal = () => {
-    const ubicacionLimpia = ubicacion.trim();
-    setReporteDuplicado(null);
-    registrarReporteEnviado(categoria, ubicacionLimpia);
-    alEnviarReporte?.({
+  const confirmarEnvioFinal = async () => {
+    if (enviando) return;
+    const datos: DatosNuevoReporte = {
       fotoUrl,
       categoria,
-      ubicacion: ubicacionLimpia,
+      ubicacion: ubicacion.trim(),
       descripcion: descripcion.trim(),
-    });
-    router.replace('/reporte-enviado');
+    };
+    setReporteDuplicado(null);
+    setErrorEnvio(null);
+    setEnviando(true);
+    try {
+      await crear(datos);
+      alEnviarReporte?.(datos);
+      router.replace('/reporte-enviado');
+    } catch {
+      setErrorEnvio('No pudimos enviar tu reporte. Revisa tu conexión e inténtalo de nuevo.');
+    } finally {
+      setEnviando(false);
+    }
   };
 
   const manejarPresionarEnviar = () => {
-    const posibleDuplicado = REPORTES_EJEMPLO_RESIDENCIAL.find(
-      (item) => item.estado !== 'resuelto' && item.categoria === categoria
-    );
+    const posibleDuplicado = buscarPosibleDuplicado(reportes, categoria, ubicacion);
 
     if (posibleDuplicado) {
       setReporteDuplicado(posibleDuplicado);
       return;
     }
 
-    confirmarEnvioFinal();
+    void confirmarEnvioFinal();
   };
 
   return (
@@ -156,7 +163,14 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
           <View
             className="border-t border-civora-border/60 bg-civora-card px-6 pt-4"
             style={{ paddingBottom: Math.max(insets.bottom, 20) }}>
-            <BotonPrincipal texto="Enviar reporte" onPress={manejarPresionarEnviar} />
+            {errorEnvio ? (
+              <Text className="mb-3 text-sm font-semibold text-red-700">{errorEnvio}</Text>
+            ) : null}
+            <BotonPrincipal
+              texto={enviando ? 'Enviando…' : errorEnvio ? 'Reintentar envío' : 'Enviar reporte'}
+              disabled={enviando}
+              onPress={manejarPresionarEnviar}
+            />
           </View>
         </View>
 
@@ -167,7 +181,7 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
             setReporteDuplicado(null);
             router.replace('/inicio');
           }}
-          alEnviarDeTodosModos={confirmarEnvioFinal}
+          alEnviarDeTodosModos={() => void confirmarEnvioFinal()}
           alCancelar={() => setReporteDuplicado(null)}
         />
       </KeyboardAvoidingView>

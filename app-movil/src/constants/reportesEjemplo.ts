@@ -3,6 +3,8 @@ import type { ReporteVecinal } from '@/types/reportes';
 export const REPORTES_EJEMPLO_RESIDENCIAL: ReporteVecinal[] = [
   {
     id: 'rep-001',
+    codigo: 'REPORTE #0245',
+    esMio: true,
     categoria: 'bache',
     estado: 'en_proceso',
     titulo: 'Bache · Pasaje 5',
@@ -13,6 +15,7 @@ export const REPORTES_EJEMPLO_RESIDENCIAL: ReporteVecinal[] = [
   },
   {
     id: 'rep-002',
+    codigo: 'REPORTE #0246',
     categoria: 'basura',
     estado: 'pendiente',
     titulo: 'Basura · Pasaje 3',
@@ -23,6 +26,7 @@ export const REPORTES_EJEMPLO_RESIDENCIAL: ReporteVecinal[] = [
   },
   {
     id: 'rep-003',
+    codigo: 'REPORTE #0247',
     categoria: 'alumbrado',
     estado: 'resuelto',
     titulo: 'Alumbrado · Pasaje 2',
