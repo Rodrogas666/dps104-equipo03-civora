@@ -16,7 +16,7 @@ interface FiltrosReportesProps {
 
 const FILTROS: { etiqueta: string; valor: FiltroMisReportes }[] = [
   { etiqueta: 'Todos', valor: 'todos' },
-  { etiqueta: 'Activos', valor: 'activos' },
+  { etiqueta: 'En curso', valor: 'activos' },
   { etiqueta: 'Resueltos', valor: 'resueltos' },
 ];
 
