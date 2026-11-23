@@ -48,8 +48,23 @@ export function ReportesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    void recargar();
-  }, [recargar]);
+    let cancelado = false;
+    void listarReportes()
+      .then((lista) => {
+        if (!cancelado) setReportes(lista);
+      })
+      .catch(() => {
+        if (!cancelado) {
+          setError('No pudimos cargar los reportes. Revisa tu conexión e inténtalo de nuevo.');
+        }
+      })
+      .finally(() => {
+        if (!cancelado) setCargando(false);
+      });
+    return () => {
+      cancelado = true;
+    };
+  }, []);
 
   const crear = useCallback(async (datos: DatosNuevoReporte) => {
     const nuevo = await crearReporte(datos);

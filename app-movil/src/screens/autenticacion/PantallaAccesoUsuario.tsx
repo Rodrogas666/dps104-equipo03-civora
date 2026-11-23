@@ -31,7 +31,10 @@ export function PantallaAccesoUsuario() {
 
   const manejarRegistro = (datos: DatosRegistroUsuario) => {
     // TODO: Conectar registro de usuario con src/services/
-    iniciarSesion(datos.correo);
+    iniciarSesion(datos.correo, {
+      nombre: datos.nombre,
+      pasajePoligono: datos.direccionResidencial,
+    });
     router.replace('/inicio');
   };
 
