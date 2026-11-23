@@ -19,6 +19,9 @@ export interface CreacionDeReportesProps {
   nombreResidencial?: string;
   inicialUsuario?: string;
   reportes?: ReporteVecinal[];
+  cargando?: boolean;
+  error?: string | null;
+  alReintentar?: () => void;
   alPresionarReportar?: () => void;
   alSeleccionarReporte?: (reporte: ReporteVecinal) => void;
   alPresionarPerfil?: () => void;

@@ -6,6 +6,7 @@ import { EncabezadoAccesoCivora } from '@/components/autenticacion/EncabezadoAcc
 import { FormularioInicioSesion } from '@/components/autenticacion/FormularioInicioSesion';
 import { FormularioRegistroUsuario } from '@/components/autenticacion/FormularioRegistroUsuario';
 import type { OpcionPestana } from '@/components/ui/SelectorPestanas';
+import { useSesion } from '@/context/SesionContext';
 import type {
   DatosInicioSesion,
   DatosRegistroUsuario,
@@ -19,14 +20,20 @@ const OPCIONES_ACCESO: OpcionPestana<ModoAutenticacion>[] = [
 
 export function PantallaAccesoUsuario() {
   const [modoActual, setModoActual] = useState<ModoAutenticacion>('inicioSesion');
+  const { iniciarSesion } = useSesion();
 
-  const manejarInicioSesion = (_datos: DatosInicioSesion) => {
+  const manejarInicioSesion = (datos: DatosInicioSesion) => {
     // TODO: Conectar inicio de sesión con src/services/
+    iniciarSesion(datos.correo);
     router.replace('/inicio');
   };
 
-  const manejarRegistro = (_datos: DatosRegistroUsuario) => {
+  const manejarRegistro = (datos: DatosRegistroUsuario) => {
     // TODO: Conectar registro de usuario con src/services/
+    iniciarSesion(datos.correo, {
+      nombre: datos.nombre,
+      pasajePoligono: datos.direccionResidencial,
+    });
     router.replace('/inicio');
   };
 
