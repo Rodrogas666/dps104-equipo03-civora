@@ -177,9 +177,9 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
         <ModalPosibleDuplicado
           visible={Boolean(reporteDuplicado)}
           reporteSimilar={reporteDuplicado}
-          alVerEseReporte={() => {
+          alVerEseReporte={(reporte) => {
             setReporteDuplicado(null);
-            router.replace('/inicio');
+            router.push({ pathname: '/reporte/[id]', params: { id: reporte.id } });
           }}
           alEnviarDeTodosModos={() => void confirmarEnvioFinal()}
           alCancelar={() => setReporteDuplicado(null)}

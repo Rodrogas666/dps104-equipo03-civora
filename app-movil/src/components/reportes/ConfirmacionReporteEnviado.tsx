@@ -41,7 +41,7 @@ export function ConfirmacionReporteEnviado({
       alVerMiReporte(reporte);
       return;
     }
-    router.replace('/inicio');
+    router.replace({ pathname: '/reporte/[id]', params: { id: reporte.id } });
   };
 
   if (!reporte) return null;

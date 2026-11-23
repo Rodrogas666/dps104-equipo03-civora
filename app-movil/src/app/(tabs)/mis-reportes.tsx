@@ -39,7 +39,13 @@ export default function MisReportesScreen() {
         ) : (
           <View className="mt-4 gap-3.5">
             {mios.map((reporte) => (
-              <TarjetaResumenReporte key={reporte.id} reporte={reporte} />
+              <TarjetaResumenReporte
+                key={reporte.id}
+                reporte={reporte}
+                alPresionar={(r) =>
+                  router.push({ pathname: '/reporte/[id]', params: { id: r.id } })
+                }
+              />
             ))}
           </View>
         )}

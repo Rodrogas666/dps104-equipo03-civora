@@ -7,6 +7,7 @@ import { FormularioInicioSesion } from '@/components/autenticacion/FormularioIni
 import { FormularioRegistroUsuario } from '@/components/autenticacion/FormularioRegistroUsuario';
 import type { OpcionPestana } from '@/components/ui/SelectorPestanas';
 import { ColoresCivora } from '@/constants/coloresCivora';
+import { useSesion } from '@/context/SesionContext';
 import type {
   DatosInicioSesion,
   DatosRegistroUsuario,
@@ -20,14 +21,17 @@ const OPCIONES_ACCESO: OpcionPestana<ModoAutenticacion>[] = [
 
 export function PantallaAccesoUsuario() {
   const [modoActual, setModoActual] = useState<ModoAutenticacion>('inicioSesion');
+  const { iniciarSesion } = useSesion();
 
-  const manejarInicioSesion = (_datos: DatosInicioSesion) => {
+  const manejarInicioSesion = (datos: DatosInicioSesion) => {
     // TODO: Conectar inicio de sesión con src/services/
+    iniciarSesion(datos.correo);
     router.replace('/inicio');
   };
 
-  const manejarRegistro = (_datos: DatosRegistroUsuario) => {
+  const manejarRegistro = (datos: DatosRegistroUsuario) => {
     // TODO: Conectar registro de usuario con src/services/
+    iniciarSesion(datos.correo);
     router.replace('/inicio');
   };
 
