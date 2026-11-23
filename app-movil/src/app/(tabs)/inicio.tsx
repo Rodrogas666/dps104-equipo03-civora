@@ -13,6 +13,9 @@ export default function InicioScreen() {
       error={error}
       alReintentar={() => void recargar()}
       alPresionarReportar={() => router.push('/nuevo-reporte')}
+      alSeleccionarReporte={(reporte) =>
+        router.push({ pathname: '/reporte/[id]', params: { id: reporte.id } })
+      }
     />
   );
 }
