@@ -3,10 +3,10 @@ import { SymbolView } from 'expo-symbols';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 
-import { ModalPosibleDuplicado } from '@/components/reportes/ModalPosibleDuplicado';
-import { SelectorCategoriaNuevoReporte } from '@/components/reportes/SelectorCategoriaNuevoReporte';
-import { SelectorFotoReporte } from '@/components/reportes/SelectorFotoReporte';
-import { SelectorUbicacionReporte } from '@/components/reportes/SelectorUbicacionReporte';
+import { ModalPosibleDuplicado } from '@/components/reportes/nuevo/ModalPosibleDuplicado';
+import { SelectorCategoriaNuevoReporte } from '@/components/reportes/nuevo/SelectorCategoriaNuevoReporte';
+import { SelectorFotoReporte } from '@/components/reportes/nuevo/SelectorFotoReporte';
+import { SelectorUbicacionReporte } from '@/components/reportes/nuevo/SelectorUbicacionReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';

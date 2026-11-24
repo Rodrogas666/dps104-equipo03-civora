@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { FiltrosReportes, type FiltroMisReportes } from '@/components/reportes/FiltrosReportes';
-import { ListaMisReportes } from '@/components/reportes/ListaMisReportes';
-import { ResumenReportes } from '@/components/reportes/ResumenReportes';
+import { FiltrosReportes, type FiltroMisReportes } from '@/components/reportes/lista/FiltrosReportes';
+import { ListaMisReportes } from '@/components/reportes/lista/ListaMisReportes';
+import { ResumenReportes } from '@/components/reportes/lista/ResumenReportes';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { useReportes } from '@/context/ReportesContext';

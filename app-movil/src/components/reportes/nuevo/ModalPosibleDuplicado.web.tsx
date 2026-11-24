@@ -1,7 +1,6 @@
 import { Modal, Pressable, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { TarjetaResumenReporte } from '@/components/reportes/TarjetaResumenReporte';
+import { TarjetaResumenReporte } from '@/components/reportes/lista/TarjetaResumenReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import type { CategoriaReporte, ReporteVecinal } from '@/types/reportes';
 
@@ -27,25 +26,14 @@ export function ModalPosibleDuplicado({
   alEnviarDeTodosModos,
   alCancelar,
 }: ModalPosibleDuplicadoProps) {
-  const insets = useSafeAreaInsets();
-
   if (!reporteSimilar) return null;
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      statusBarTranslucent
-      onRequestClose={alCancelar}>
-      <View className="flex-1 justify-end bg-[#102820]/55">
-        <Pressable className="flex-1" onPress={alCancelar} />
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={alCancelar}>
+      <View className="flex-1 items-center justify-center bg-[#102820]/55 p-4">
+        <Pressable className="absolute inset-0" onPress={alCancelar} />
 
-        <View
-          className="rounded-t-[28px] bg-civora-bg px-6 pt-3"
-          style={{ paddingBottom: Math.max(insets.bottom, 20) }}>
-          <View className="mb-4 h-1 w-10 self-center rounded-full bg-civora-border" />
-
+        <View className="w-full max-w-md rounded-3xl border border-civora-border bg-civora-bg p-6 shadow-xl">
           <Text className="text-xl font-bold text-civora-text">
             Ya hay un reporte parecido.
           </Text>
@@ -70,7 +58,7 @@ export function ModalPosibleDuplicado({
             <Pressable
               onPress={alEnviarDeTodosModos}
               accessibilityRole="button"
-              className="w-full items-center justify-center rounded-2xl border border-civora-border bg-civora-card py-4 active:bg-civora-surface">
+              className="w-full cursor-pointer items-center justify-center rounded-2xl border border-civora-border bg-civora-card py-4 hover:bg-civora-surface">
               <Text className="text-sm font-semibold text-civora-text">
                 Es otro problema, enviar de todos modos
               </Text>
@@ -79,7 +67,7 @@ export function ModalPosibleDuplicado({
             <Pressable
               onPress={alCancelar}
               accessibilityRole="button"
-              className="items-center py-2.5 active:opacity-70">
+              className="cursor-pointer items-center py-2 hover:opacity-75">
               <Text className="text-sm font-semibold text-civora-muted">Cancelar</Text>
             </Pressable>
           </View>

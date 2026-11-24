@@ -3,9 +3,9 @@ import { useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { BannerReportarProblema } from '@/components/reportes/BannerReportarProblema';
-import { FiltrosReportesResidencial } from '@/components/reportes/FiltrosReportesResidencial';
-import { TarjetaResumenReporte } from '@/components/reportes/TarjetaResumenReporte';
+import { BannerReportarProblema } from '@/components/reportes/lista/BannerReportarProblema';
+import { FiltrosReportesResidencial } from '@/components/reportes/lista/FiltrosReportesResidencial';
+import { TarjetaResumenReporte } from '@/components/reportes/lista/TarjetaResumenReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import type {

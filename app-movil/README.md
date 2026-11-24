@@ -55,7 +55,10 @@ src/
 │   ├── autenticacion/  Encabezado y formularios de acceso y registro
 │   ├── camara/         Cámara, controles y marco de encuadre
 │   ├── perfil/         Pantalla de perfil
-│   ├── reportes/       Lista, creación y detalle de reportes
+│   ├── reportes/       EtiquetaEstadoReporte (compartida por las tres subcarpetas)
+│   │   ├── lista/      Inicio y Mis reportes: tarjetas, listas, filtros y resumen
+│   │   ├── nuevo/      Flujo de nuevo reporte: selectores, mapa, duplicado y confirmación
+│   │   └── detalle/    Detalle del reporte y panel de la directiva
 │   └── ui/             Piezas reutilizables (botón, campo de texto, pestañas)
 ├── screens/     Pantallas compuestas (acceso de usuario)
 ├── context/     Estado global: sesión (SesionContext) y reportes (ReportesContext)

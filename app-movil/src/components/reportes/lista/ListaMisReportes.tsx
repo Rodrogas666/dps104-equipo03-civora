@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-import { TarjetaMiReporte } from '@/components/reportes/TarjetaMiReporte';
+import { TarjetaMiReporte } from '@/components/reportes/lista/TarjetaMiReporte';
 import type { ReporteVecinal } from '@/types/reportes';
 
 interface ListaMisReportesProps {
