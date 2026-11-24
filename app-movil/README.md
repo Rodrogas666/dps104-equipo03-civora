@@ -1,20 +1,9 @@
-# App móvil Civora
+## Fase 2 - Interfaz en React Native
 
-Aquí vivirá el proyecto **React Native + Expo** (Lab Fase 2 en adelante).
+App móvil de Civora con Expo (React Native) y expo-router.
+Pantallas: acceso, inicio, nuevo reporte (cámara y ubicación), Mis reportes, detalle del reporte (panel de directiva) y perfil.
 
-Estructura prevista:
-
-```
-app-movil/
-├── App.tsx
-├── screens/       # pantallas (ver docs/T2_diseno)
-├── components/    # EtiquetaEstado, CategoriaReporte, tarjetas, etc.
-├── services/      # conexión con la nube
-└── .env.example   # variables sin valores reales
-```
-
-Crear el proyecto dentro de esta carpeta:
-
-```bash
-npx create-expo-app@latest . --template blank-typescript
-```
+Cómo ejecutar:
+1. cd app-movil
+2. npm install
+3. npx expo start (escanear el QR con Expo Go)
