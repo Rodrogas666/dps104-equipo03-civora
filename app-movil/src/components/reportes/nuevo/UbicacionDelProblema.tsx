@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { MapaIlustrativoResidencial } from '@/components/reportes/MapaIlustrativoResidencial';
+import { MapaIlustrativoResidencial } from '@/components/reportes/nuevo/MapaIlustrativoResidencial';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import {

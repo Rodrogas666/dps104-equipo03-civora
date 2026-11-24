@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 
-import { CreacionDeReportes } from '@/components/reportes/CreacionDeReportes';
+import { CreacionDeReportes } from '@/components/reportes/lista/CreacionDeReportes';
 import { useReportes } from '@/context/ReportesContext';
 import { useSesion } from '@/context/SesionContext';
 

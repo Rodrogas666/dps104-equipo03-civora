@@ -2,10 +2,10 @@ import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { BannerReportarProblema } from '@/components/reportes/BannerReportarProblema';
-import { BarraNavegacionInferior } from '@/components/reportes/BarraNavegacionInferior';
-import { FiltrosReportesResidencial } from '@/components/reportes/FiltrosReportesResidencial';
-import { TarjetaResumenReporte } from '@/components/reportes/TarjetaResumenReporte';
+import { BannerReportarProblema } from '@/components/reportes/lista/BannerReportarProblema';
+import { BarraNavegacionInferior } from '@/components/reportes/lista/BarraNavegacionInferior';
+import { FiltrosReportesResidencial } from '@/components/reportes/lista/FiltrosReportesResidencial';
+import { TarjetaResumenReporte } from '@/components/reportes/lista/TarjetaResumenReporte';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
 import type {

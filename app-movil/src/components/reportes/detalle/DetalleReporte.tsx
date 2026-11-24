@@ -5,7 +5,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { EtiquetaEstadoReporte } from '@/components/reportes/EtiquetaEstadoReporte';
-import { PanelDirectiva } from '@/components/reportes/PanelDirectiva';
+import { PanelDirectiva } from '@/components/reportes/detalle/PanelDirectiva';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { useReportes } from '@/context/ReportesContext';
