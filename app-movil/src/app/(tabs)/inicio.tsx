@@ -7,7 +7,7 @@ import { useSesion } from '@/context/SesionContext';
 export default function InicioScreen() {
   const { reportes, cargando, error, recargar } = useReportes();
   const { nombre, residencial } = useSesion();
-  const inicialUsuario = nombre.trim().charAt(0).toUpperCase() || 'A';
+  const inicialUsuario = nombre.trim().charAt(0).toUpperCase() || 'V';
 
   return (
     <CreacionDeReportes

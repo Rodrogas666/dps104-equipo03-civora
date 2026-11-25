@@ -1,8 +1,7 @@
-import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
-
 type ListenerFoto = (url: string | null) => void;
 
-let fotoReporteActual: string | null = REPORTES_EJEMPLO_RESIDENCIAL[0]?.imagenUrl ?? null;
+// Sin foto al empezar: el usuario debe tomarla o elegirla (es obligatoria).
+let fotoReporteActual: string | null = null;
 const listeners = new Set<ListenerFoto>();
 
 export function obtenerFotoReporteActual(): string | null {
