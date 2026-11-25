@@ -42,8 +42,12 @@ export function PanelDirectiva({ reporte, alCambiarEstado }: PanelDirectivaProps
       setExito(`Estado actualizado a ${ETIQUETA_ESTADO[estadoPorConfirmar]}.`);
       setNota('');
       setEstadoPorConfirmar(null);
-    } catch {
-      setError('No pudimos actualizar el estado. Revisa tu conexión e inténtalo de nuevo.');
+    } catch (e) {
+      setError(
+        e instanceof Error && e.message
+          ? e.message
+          : 'No pudimos actualizar el estado. Revisa tu conexión e inténtalo de nuevo.'
+      );
     } finally {
       setEnviando(false);
     }

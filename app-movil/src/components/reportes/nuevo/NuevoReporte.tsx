@@ -70,8 +70,12 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
       await crear(datos);
       alEnviarReporte?.(datos);
       router.replace('/reporte-enviado');
-    } catch {
-      setErrorEnvio('No pudimos enviar tu reporte. Revisa tu conexión e inténtalo de nuevo.');
+    } catch (e) {
+      setErrorEnvio(
+        e instanceof Error && e.message
+          ? e.message
+          : 'No pudimos enviar tu reporte. Revisa tu conexión e inténtalo de nuevo.'
+      );
     } finally {
       setEnviando(false);
     }

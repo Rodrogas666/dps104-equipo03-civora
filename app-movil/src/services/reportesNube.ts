@@ -4,7 +4,7 @@
  */
 import { obtenerSupabase } from '@/lib/supabase';
 import { errorEnEspanol } from '@/services/errores';
-import { FOTO_POR_DEFECTO, formatearFechaHora } from '@/services/formatoReportes';
+import { FOTO_POR_DEFECTO, formatearFechaHora, tituloReporte } from '@/services/formatoReportes';
 import type {
   CategoriaReporte,
   DatosNuevoReporte,
@@ -117,14 +117,88 @@ export function obtenerReporte(id: string): Promise<ReporteVecinal | null> {
   });
 }
 
-export async function crearReporte(_datos: DatosNuevoReporte): Promise<ReporteVecinal> {
-  throw new Error('Función de la nube aún no implementada.');
+const BUCKET_FOTOS = 'fotos-reportes';
+
+/**
+ * Sube la foto al bucket `fotos-reportes/<idUsuario>/<fecha>.jpg` y devuelve su URL pública.
+ * - Sin foto: devuelve la foto por defecto (como en memoria).
+ * - URL http(s) (p. ej. las fotos de ejemplo): ya es pública, se usa tal cual.
+ * Si la subida falla lanza Error y el reporte NO se crea.
+ */
+export async function subirFoto(uri: string | null): Promise<string> {
+  if (!uri) return FOTO_POR_DEFECTO;
+  if (/^https?:\/\//i.test(uri)) return uri;
+
+  const cliente = obtenerSupabase();
+  const idUsuario = await idUsuarioActual();
+  if (!idUsuario) fallar({ status: 401 });
+
+  try {
+    const contenido = await (await fetch(uri)).arrayBuffer();
+    const ruta = `${idUsuario}/${Date.now()}.jpg`;
+    const { error } = await cliente.storage
+      .from(BUCKET_FOTOS)
+      .upload(ruta, contenido, { contentType: 'image/jpeg', upsert: false });
+    if (error) throw error;
+    return cliente.storage.from(BUCKET_FOTOS).getPublicUrl(ruta).data.publicUrl;
+  } catch (error) {
+    throw new ErrorServicio(`No pudimos subir la foto. ${errorEnEspanol(error).message}`);
+  }
 }
 
-export async function actualizarEstado(
-  _id: string,
-  _estado: EstadoReporte,
-  _nota?: string
+export function crearReporte(datos: DatosNuevoReporte): Promise<ReporteVecinal> {
+  return conErroresEnEspanol(async () => {
+    const idUsuario = await idUsuarioActual();
+    if (!idUsuario) fallar({ status: 401 });
+
+    // Primero la foto: si falla, no se crea el reporte.
+    const fotoUrl = await subirFoto(datos.fotoUrl);
+    const ubicacion = datos.ubicacion || 'Residencial Las Palmas';
+
+    const respuesta = await obtenerSupabase()
+      .from('reportes')
+      .insert({
+        autor_id: idUsuario,
+        categoria: datos.categoria,
+        titulo: tituloReporte(datos.categoria, datos.ubicacion),
+        descripcion: datos.descripcion || null,
+        ubicacion_texto: ubicacion,
+        latitud: datos.latitud ?? null,
+        longitud: datos.longitud ?? null,
+        foto_url: fotoUrl,
+      })
+      .select(COLUMNAS_REPORTE)
+      .returns<FilaReporte[]>()
+      .single();
+    if (respuesta.error) fallar(respuesta.error, respuesta.status);
+    return aReporteVecinal(respuesta.data, idUsuario);
+  });
+}
+
+/** La base solo deja actualizar a la directiva (RLS + rol en `perfiles`). */
+export function actualizarEstado(
+  id: string,
+  estado: EstadoReporte,
+  nota?: string
 ): Promise<ReporteVecinal> {
-  throw new Error('Función de la nube aún no implementada.');
+  return conErroresEnEspanol(async () => {
+    const cliente = obtenerSupabase();
+    const [idUsuario, respuesta] = await Promise.all([
+      idUsuarioActual(),
+      cliente
+        .from('reportes')
+        .update({ estado, nota: nota?.trim() || null })
+        .eq('id', id)
+        .select(COLUMNAS_REPORTE)
+        .returns<FilaReporte[]>()
+        .maybeSingle(),
+    ]);
+    if (respuesta.error) fallar(respuesta.error, respuesta.status);
+    if (!respuesta.data) {
+      // Sin filas actualizadas: o no existe, o RLS lo bloqueó por no ser directiva.
+      const existe = await obtenerReporte(id);
+      fallar({ status: existe ? 403 : 404 });
+    }
+    return aReporteVecinal(respuesta.data, idUsuario);
+  });
 }
