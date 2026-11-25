@@ -15,6 +15,13 @@ import {
 } from '@/services/reportesService';
 import type { DatosNuevoReporte, EstadoReporte, ReporteVecinal } from '@/types/reportes';
 
+const ERROR_CARGA = 'No pudimos cargar los reportes. Revisa tu conexión e inténtalo de nuevo.';
+
+/** Usa el mensaje en español que lanza el servicio; si no hay, uno genérico. */
+function mensajeCarga(error: unknown): string {
+  return error instanceof Error && error.message ? error.message : ERROR_CARGA;
+}
+
 interface ReportesContextValor {
   reportes: ReporteVecinal[];
   cargando: boolean;
@@ -40,8 +47,8 @@ export function ReportesProvider({ children }: { children: ReactNode }) {
     setError(null);
     try {
       setReportes(await listarReportes());
-    } catch {
-      setError('No pudimos cargar los reportes. Revisa tu conexión e inténtalo de nuevo.');
+    } catch (e) {
+      setError(mensajeCarga(e));
     } finally {
       setCargando(false);
     }
@@ -53,10 +60,8 @@ export function ReportesProvider({ children }: { children: ReactNode }) {
       .then((lista) => {
         if (!cancelado) setReportes(lista);
       })
-      .catch(() => {
-        if (!cancelado) {
-          setError('No pudimos cargar los reportes. Revisa tu conexión e inténtalo de nuevo.');
-        }
+      .catch((e: unknown) => {
+        if (!cancelado) setError(mensajeCarga(e));
       })
       .finally(() => {
         if (!cancelado) setCargando(false);
