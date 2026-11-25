@@ -1,8 +1,6 @@
 import type { ReporteVecinal } from '@/types/reportes';
 
 export const REPORTES_EJEMPLO_RESIDENCIAL: ReporteVecinal[] = [
-  // Comentados temporalmente para probar la vista "Aún no hay reportes" en /inicio
-  /*
   {
     id: 'rep-001',
     codigo: 'REPORTE #0245',
@@ -37,5 +35,4 @@ export const REPORTES_EJEMPLO_RESIDENCIAL: ReporteVecinal[] = [
     imagenUrl:
       'https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=320&q=80',
   },
-  */
 ];
