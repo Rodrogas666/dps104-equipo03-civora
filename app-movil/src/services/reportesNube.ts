@@ -171,8 +171,26 @@ export function crearReporte(datos: DatosNuevoReporte): Promise<ReporteVecinal> 
       .returns<FilaReporte[]>()
       .single();
     if (respuesta.error) fallar(respuesta.error, respuesta.status);
-    return aReporteVecinal(respuesta.data, idUsuario);
+    return releerConHistorial(respuesta.data, idUsuario);
   });
+}
+
+/**
+ * Vuelve a leer el reporte recién escrito para traer el historial que agregan los
+ * disparadores (la respuesta de insert/update no alcanza a verlo). Si esa lectura
+ * falla, devuelve la fila de la escritura: el cambio ya se guardó y no debe reintentarse.
+ */
+async function releerConHistorial(
+  fila: FilaReporte,
+  idUsuario: string | null
+): Promise<ReporteVecinal> {
+  try {
+    const completo = await obtenerReporte(fila.id);
+    if (completo) return completo;
+  } catch {
+    // Se usa la fila de la escritura.
+  }
+  return aReporteVecinal(fila, idUsuario);
 }
 
 /** La base solo deja actualizar a la directiva (RLS + rol en `perfiles`). */
@@ -199,6 +217,6 @@ export function actualizarEstado(
       const existe = await obtenerReporte(id);
       fallar({ status: existe ? 403 : 404 });
     }
-    return aReporteVecinal(respuesta.data, idUsuario);
+    return releerConHistorial(respuesta.data, idUsuario);
   });
 }
