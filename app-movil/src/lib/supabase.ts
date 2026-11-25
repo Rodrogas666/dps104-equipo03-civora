@@ -24,6 +24,14 @@ function crearCliente(): SupabaseClient | null {
     );
   }
 
+  // Render de servidor de la web (Node): no hay window ni localStorage. Ahí el
+  // cliente no guarda sesión ni toca AsyncStorage (Supabase usa memoria).
+  if (Platform.OS === 'web' && typeof window === 'undefined') {
+    return createClient(url, claveAnonima, {
+      auth: { autoRefreshToken: false, persistSession: false, detectSessionInUrl: false },
+    });
+  }
+
   return createClient(url, claveAnonima, {
     auth: {
       storage: AsyncStorage,
