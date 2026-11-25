@@ -165,7 +165,7 @@ export function crearReporte(datos: DatosNuevoReporte): Promise<ReporteVecinal> 
         ubicacion_texto: ubicacion,
         latitud: datos.latitud ?? null,
         longitud: datos.longitud ?? null,
-        foto_url: fotoUrl,
+        foto_url: fotoUrl || null,
       })
       .select(COLUMNAS_REPORTE)
       .returns<FilaReporte[]>()
