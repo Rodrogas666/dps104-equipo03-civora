@@ -34,19 +34,18 @@ export function PerfilUsuario({
   const sesion = useSesion();
   const { reportes } = useReportes();
 
-  const nombre = nombreProp ?? sesion.nombre ?? 'Ana Rivas';
-  const correo = correoProp ?? sesion.correo ?? 'ana.rivas@correo.com';
+  const nombre = nombreProp ?? sesion.nombre;
+  const correo = correoProp ?? sesion.correo;
   const rol = rolProp ?? sesion.rol ?? 'vecino';
   const pasajePoligono = pasajePoligonoProp ?? sesion.pasajePoligono ?? 'Pasaje 5, Polígono C';
   const residencial = residencialProp ?? sesion.residencial ?? 'Residencial Las Palmas';
 
   const totalReportes = useMemo(() => {
     if (typeof reportesRealizadosProp === 'number') return reportesRealizadosProp;
-    const mios = reportes.filter((r) => r.esMio === true).length;
-    return mios > 0 ? mios : reportes.length || 3;
+    return reportes.filter((r) => r.esMio === true).length;
   }, [reportes, reportesRealizadosProp]);
 
-  const inicial = nombre.trim().charAt(0).toUpperCase() || 'A';
+  const inicial = nombre.trim().charAt(0).toUpperCase() || 'V';
   const etiquetaRol = rol === 'directiva' ? 'Directiva' : 'Vecino';
   const textoReportes = `${totalReportes} ${totalReportes === 1 ? 'reporte' : 'reportes'}`;
 
@@ -70,6 +69,9 @@ export function PerfilUsuario({
     sesion.cerrarSesion();
     router.replace('/');
   };
+
+  // Sin sesión no se pinta ningún dato (evita el parpadeo al cerrar sesión).
+  if (!correo) return null;
 
   return (
     <SafeAreaView

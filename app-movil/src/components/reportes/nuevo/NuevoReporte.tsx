@@ -19,9 +19,17 @@ import { SelectorUbicacionReporte } from '@/components/reportes/nuevo/SelectorUb
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
 import { useReportes } from '@/context/ReportesContext';
-import { obtenerUbicacionBorrador, suscribirUbicacionBorrador } from '@/services/estadoBorradorReporte';
+import {
+  obtenerUbicacionBorrador,
+  reiniciarUbicacionBorrador,
+  suscribirUbicacionBorrador,
+} from '@/services/estadoBorradorReporte';
 import { buscarPosibleDuplicado } from '@/services/reportesService';
-import { obtenerFotoReporteActual, suscribirFotoReporte } from '@/services/estadoFotoReporte';
+import {
+  actualizarFotoReporte,
+  obtenerFotoReporteActual,
+  suscribirFotoReporte,
+} from '@/services/estadoFotoReporte';
 import type { CategoriaReporte, DatosNuevoReporte, ReporteVecinal } from '@/types/reportes';
 
 export interface NuevoReporteProps {
@@ -40,7 +48,15 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
   const [descripcion, setDescripcion] = useState('');
   const [reporteDuplicado, setReporteDuplicado] = useState<ReporteVecinal | null>(null);
 
-  useEffect(() => suscribirFotoReporte(setFotoUrl), []);
+  useEffect(
+    () =>
+      suscribirFotoReporte((url) => {
+        setFotoUrl(url);
+        // Al elegir una foto desaparece el aviso de "agrega una foto".
+        if (url) setErrorEnvio(null);
+      }),
+    []
+  );
   useEffect(() => suscribirUbicacionBorrador(setUbicacion), []);
 
   const manejarVolver = () => {
@@ -57,6 +73,10 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
 
   const confirmarEnvioFinal = async () => {
     if (enviando) return;
+    if (!fotoUrl) {
+      setErrorEnvio('Agrega una foto del problema para enviar el reporte.');
+      return;
+    }
     const datos: DatosNuevoReporte = {
       fotoUrl,
       categoria,
@@ -69,6 +89,11 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
     try {
       await crear(datos);
       alEnviarReporte?.(datos);
+      // Reinicia el borrador para que el siguiente "Nuevo reporte" arranque limpio.
+      actualizarFotoReporte(null);
+      reiniciarUbicacionBorrador();
+      setDescripcion('');
+      setCategoria('bache');
       router.replace('/reporte-enviado');
     } catch (e) {
       setErrorEnvio(
@@ -82,6 +107,11 @@ export function NuevoReporte({ alVolver, alEnviarReporte }: NuevoReporteProps) {
   };
 
   const manejarPresionarEnviar = () => {
+    if (!fotoUrl) {
+      setErrorEnvio('Agrega una foto del problema para enviar el reporte.');
+      return;
+    }
+
     const posibleDuplicado = buscarPosibleDuplicado(reportes, categoria, ubicacion);
 
     if (posibleDuplicado) {

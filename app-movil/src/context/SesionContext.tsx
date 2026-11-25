@@ -47,8 +47,8 @@ interface SesionValor {
 const SesionContext = createContext<SesionValor | null>(null);
 
 const DATOS_POR_DEFECTO = {
-  nombre: 'Ana Rivas',
-  correo: 'ana.rivas@correo.com',
+  nombre: 'Vecino',
+  correo: 'vecino@correo.com',
   pasajePoligono: 'Pasaje 5, Polígono C',
   residencial: 'Residencial Las Palmas',
 } as const;
@@ -77,10 +77,8 @@ function deducirNombreDesdeCorreo(correo: string): string {
 export function SesionProvider({ children }: { children: ReactNode }) {
   const [correo, setCorreo] = useState<string | null>(null);
   const [rol, setRol] = useState<RolUsuario>('vecino');
-  const [nombre, setNombre] = useState<string>(DATOS_POR_DEFECTO.nombre);
-  const [pasajePoligono, setPasajePoligono] = useState<string>(
-    DATOS_POR_DEFECTO.pasajePoligono
-  );
+  const [nombre, setNombre] = useState<string>('');
+  const [pasajePoligono, setPasajePoligono] = useState<string>('');
   const [residencial, setResidencial] = useState<string>(DATOS_POR_DEFECTO.residencial);
   const [idUsuario, setIdUsuario] = useState<string | null>(null);
   const [sesionRestaurada, setSesionRestaurada] = useState(false);
@@ -99,8 +97,9 @@ export function SesionProvider({ children }: { children: ReactNode }) {
     setSesionRestaurada(false);
     setCorreo(null);
     setRol('vecino');
-    setNombre(DATOS_POR_DEFECTO.nombre);
-    setPasajePoligono(DATOS_POR_DEFECTO.pasajePoligono);
+    // Sin sesión no se vuelve a datos de ejemplo.
+    setNombre('');
+    setPasajePoligono('');
     setResidencial(DATOS_POR_DEFECTO.residencial);
   }, []);
 

@@ -28,7 +28,7 @@ export function ResumenReportes({
           {activos}
         </Text>
         <Text className="mt-1 text-xs text-white">
-          En curso
+          Activos
         </Text>
       </View>
 

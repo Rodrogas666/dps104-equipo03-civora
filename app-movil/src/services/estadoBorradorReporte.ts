@@ -12,7 +12,9 @@ export interface ResumenReporteEnviado {
 type ListenerUbicacion = (ubicacion: string) => void;
 type ListenerReporteEnviado = (reporte: ResumenReporteEnviado) => void;
 
-let ubicacionActual = 'Pasaje 5, Polígono C';
+const UBICACION_INICIAL = 'Pasaje 5, Polígono C';
+
+let ubicacionActual = UBICACION_INICIAL;
 let contadorReportes = 248;
 
 let ultimoReporteEnviado: ResumenReporteEnviado = {
@@ -48,6 +50,11 @@ export function suscribirUbicacionBorrador(listener: ListenerUbicacion): () => v
   return () => {
     listenersUbicacion.delete(listener);
   };
+}
+
+/** Devuelve la ubicación del borrador a su valor inicial (tras enviar un reporte). */
+export function reiniciarUbicacionBorrador(): void {
+  actualizarUbicacionBorrador(UBICACION_INICIAL);
 }
 
 export function obtenerUltimoReporteEnviado(): ResumenReporteEnviado {
