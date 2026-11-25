@@ -1,8 +1,10 @@
 import { Image } from 'expo-image';
 import { router } from 'expo-router';
+import { SymbolView } from 'expo-symbols';
 import { Pressable, Text, View } from 'react-native';
 
 import { EtiquetaEstadoReporte } from '@/components/reportes/EtiquetaEstadoReporte';
+import { ColoresCivora } from '@/constants/coloresCivora';
 import type { ReporteVecinal } from '@/types/reportes';
 
 interface TarjetaMiReporteProps {
@@ -17,12 +19,24 @@ export function TarjetaMiReporte({ reporte }: TarjetaMiReporteProps) {
       onPress={() => router.push({ pathname: '/reporte/[id]', params: { id: reporte.id } })}
       className="overflow-hidden rounded-2xl border border-civora-border bg-civora-card active:opacity-80">
       <View className="flex-row gap-3 p-3">
-        <Image
-          source={{ uri: reporte.imagenUrl }}
-          contentFit="cover"
-          transition={200}
-          style={{ width: 100, height: 110, borderRadius: 12 }}
-        />
+        {reporte.imagenUrl ? (
+          <Image
+            source={{ uri: reporte.imagenUrl }}
+            contentFit="cover"
+            transition={200}
+            style={{ width: 100, height: 110, borderRadius: 12 }}
+          />
+        ) : (
+          <View
+            className="items-center justify-center bg-civora-surface"
+            style={{ width: 100, height: 110, borderRadius: 12 }}>
+            <SymbolView
+              name={{ ios: 'camera', android: 'photo_camera', web: 'photo_camera' }}
+              size={28}
+              tintColor={ColoresCivora.primary}
+            />
+          </View>
+        )}
 
         <View className="flex-1 justify-center gap-1">
           <EtiquetaEstadoReporte estado={reporte.estado} />

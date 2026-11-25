@@ -52,12 +52,22 @@ export function DetalleReporte({ id }: { id: string }) {
       ) : (
         <ScrollView contentContainerClassName="gap-4 px-6 pb-8 pt-2" showsVerticalScrollIndicator={false}>
           <View className="overflow-hidden rounded-2xl bg-civora-surface">
-            <Image
-              source={{ uri: reporte.imagenUrl }}
-              contentFit="cover"
-              transition={200}
-              style={{ width: '100%', height: 200 }}
-            />
+            {reporte.imagenUrl ? (
+              <Image
+                source={{ uri: reporte.imagenUrl }}
+                contentFit="cover"
+                transition={200}
+                style={{ width: '100%', height: 200 }}
+              />
+            ) : (
+              <View className="items-center justify-center" style={{ width: '100%', height: 200 }}>
+                <SymbolView
+                  name={{ ios: 'camera', android: 'photo_camera', web: 'photo_camera' }}
+                  size={28}
+                  tintColor={ColoresCivora.primary}
+                />
+              </View>
+            )}
           </View>
 
           <View className="flex-row items-center justify-between">

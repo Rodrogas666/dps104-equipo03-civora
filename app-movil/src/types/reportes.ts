@@ -20,6 +20,20 @@ export interface ReporteVecinal {
   nota?: string;
   /** true si lo creó el usuario de la sesión (para "Mis reportes"). */
   esMio?: boolean;
+  /** Coordenadas del problema (solo si se conocen). */
+  latitud?: number;
+  longitud?: number;
+  /** Fecha de creación en formato ISO (viene de la nube). */
+  creadoEn?: string;
+  /** Cambios de estado, del más antiguo al más reciente (viene de la nube). */
+  historial?: EntradaHistorialReporte[];
+}
+
+export interface EntradaHistorialReporte {
+  estado: EstadoReporte;
+  /** Fecha del cambio en formato ISO. */
+  creadoEn: string;
+  nota?: string;
 }
 
 export interface DatosNuevoReporte {
@@ -27,4 +41,6 @@ export interface DatosNuevoReporte {
   categoria: CategoriaReporte;
   ubicacion: string;
   descripcion: string;
+  latitud?: number;
+  longitud?: number;
 }
