@@ -4,6 +4,7 @@ import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BannerReportarProblema } from '@/components/reportes/lista/BannerReportarProblema';
+import { EstadoSinReportes } from '@/components/reportes/lista/EstadoSinReportes';
 import { FiltrosReportesResidencial } from '@/components/reportes/lista/FiltrosReportesResidencial';
 import { TarjetaResumenReporte } from '@/components/reportes/lista/TarjetaResumenReporte';
 import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
@@ -52,6 +53,8 @@ export function CreacionDeReportes({
     });
   }, [reportes, categoriaSeleccionada, estadoSeleccionado]);
 
+  const sinReportes = !cargando && !error && reportes.length === 0;
+
   return (
     <SafeAreaView
       edges={['top', 'left', 'right']}
@@ -59,7 +62,7 @@ export function CreacionDeReportes({
       <View className="flex-1">
         <ScrollView
           className="flex-1"
-          contentContainerClassName="px-5 pb-6 pt-3"
+          contentContainerClassName="flex-grow px-5 pb-6 pt-3"
           showsVerticalScrollIndicator={false}>
           <View className="flex-row items-center justify-between">
             <Text
@@ -89,51 +92,59 @@ export function CreacionDeReportes({
             </Text>
           </View>
 
-          <View className="mt-4">
-            <BannerReportarProblema alReportarProblema={alPresionarReportar} />
-          </View>
-
-          <Text className="mb-3 mt-6 text-xl font-bold text-civora-text">
-            En la residencial
-          </Text>
-
-          <FiltrosReportesResidencial
-            categoriaSeleccionada={categoriaSeleccionada}
-            estadoSeleccionado={estadoSeleccionado}
-            alSeleccionarCategoria={setCategoriaSeleccionada}
-            alSeleccionarEstado={setEstadoSeleccionado}
-          />
-
-          <View className="mt-4 gap-3.5">
-            {cargando ? (
-              <View className="items-center py-10">
-                <ActivityIndicator color={ColoresCivora.primary} />
-                <Text className="mt-3 text-xs text-civora-muted">Cargando reportes…</Text>
+          {sinReportes ? (
+            <EstadoSinReportes alReportarProblema={alPresionarReportar} />
+          ) : (
+            <>
+              <View className="mt-4">
+                <BannerReportarProblema alReportarProblema={alPresionarReportar} />
               </View>
-            ) : error ? (
-              <View className="gap-3 rounded-2xl border border-civora-border bg-civora-card px-6 py-6">
-                <Text className="text-sm text-civora-text">{error}</Text>
-                {alReintentar ? <BotonPrincipal texto="Reintentar" onPress={alReintentar} /> : null}
+
+              <Text className="mb-3 mt-6 text-xl font-bold text-civora-text">
+                En la residencial
+              </Text>
+
+              <FiltrosReportesResidencial
+                categoriaSeleccionada={categoriaSeleccionada}
+                estadoSeleccionado={estadoSeleccionado}
+                alSeleccionarCategoria={setCategoriaSeleccionada}
+                alSeleccionarEstado={setEstadoSeleccionado}
+              />
+
+              <View className="mt-4 gap-3.5">
+                {cargando ? (
+                  <View className="items-center py-10">
+                    <ActivityIndicator color={ColoresCivora.primary} />
+                    <Text className="mt-3 text-xs text-civora-muted">Cargando reportes…</Text>
+                  </View>
+                ) : error ? (
+                  <View className="gap-3 rounded-2xl border border-civora-border bg-civora-card px-6 py-6">
+                    <Text className="text-sm text-civora-text">{error}</Text>
+                    {alReintentar ? (
+                      <BotonPrincipal texto="Reintentar" onPress={alReintentar} />
+                    ) : null}
+                  </View>
+                ) : reportesFiltrados.length > 0 ? (
+                  reportesFiltrados.map((reporte) => (
+                    <TarjetaResumenReporte
+                      key={reporte.id}
+                      reporte={reporte}
+                      alPresionar={alSeleccionarReporte}
+                    />
+                  ))
+                ) : (
+                  <View className="items-center rounded-2xl border border-civora-border bg-civora-card px-6 py-8">
+                    <Text className="text-sm font-semibold text-civora-text">
+                      No hay reportes con estos filtros
+                    </Text>
+                    <Text className="mt-1 text-center text-xs text-civora-muted">
+                      Prueba cambiando la categoría o el estado seleccionado.
+                    </Text>
+                  </View>
+                )}
               </View>
-            ) : reportesFiltrados.length > 0 ? (
-              reportesFiltrados.map((reporte) => (
-                <TarjetaResumenReporte
-                  key={reporte.id}
-                  reporte={reporte}
-                  alPresionar={alSeleccionarReporte}
-                />
-              ))
-            ) : (
-              <View className="items-center rounded-2xl border border-civora-border bg-civora-card px-6 py-8">
-                <Text className="text-sm font-semibold text-civora-text">
-                  No hay reportes con estos filtros
-                </Text>
-                <Text className="mt-1 text-center text-xs text-civora-muted">
-                  Prueba cambiando la categoría o el estado seleccionado.
-                </Text>
-              </View>
-            )}
-          </View>
+            </>
+          )}
         </ScrollView>
       </View>
     </SafeAreaView>

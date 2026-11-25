@@ -1,13 +1,14 @@
 import { SymbolView } from 'expo-symbols';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
 
 import { BannerReportarProblema } from '@/components/reportes/lista/BannerReportarProblema';
 import { BarraNavegacionInferior } from '@/components/reportes/lista/BarraNavegacionInferior';
+import { EstadoSinReportes } from '@/components/reportes/lista/EstadoSinReportes';
 import { FiltrosReportesResidencial } from '@/components/reportes/lista/FiltrosReportesResidencial';
 import { TarjetaResumenReporte } from '@/components/reportes/lista/TarjetaResumenReporte';
+import { BotonPrincipal } from '@/components/ui/BotonPrincipal';
 import { ColoresCivora } from '@/constants/coloresCivora';
-import { REPORTES_EJEMPLO_RESIDENCIAL } from '@/constants/reportesEjemplo';
 import type {
   CategoriaReporte,
   FiltroEstadoReporte,
@@ -36,7 +37,10 @@ const PESTANAS_WEB: { valor: PestanaInferiorCivora; etiqueta: string }[] = [
 export function CreacionDeReportes({
   nombreResidencial = 'Residencial Las Palmas',
   inicialUsuario = 'V',
-  reportes = REPORTES_EJEMPLO_RESIDENCIAL,
+  reportes = [],
+  cargando = false,
+  error = null,
+  alReintentar,
   alPresionarReportar,
   alSeleccionarReporte,
   alPresionarPerfil,
@@ -56,6 +60,8 @@ export function CreacionDeReportes({
       return coincideCategoria && coincideEstado;
     });
   }, [reportes, categoriaSeleccionada, estadoSeleccionado]);
+
+  const sinReportes = !cargando && !error && reportes.length === 0;
 
   const manejarCambioPestana = (pestana: PestanaInferiorCivora) => {
     setPestanaActiva(pestana);
@@ -121,42 +127,60 @@ export function CreacionDeReportes({
 
       <ScrollView
         className="flex-1"
-        contentContainerClassName="mx-auto w-full max-w-5xl px-5 py-6 md:px-8 md:py-8"
+        contentContainerClassName="mx-auto w-full max-w-5xl flex-grow px-5 py-6 md:px-8 md:py-8"
         showsVerticalScrollIndicator={false}>
-        <BannerReportarProblema alReportarProblema={alPresionarReportar} />
+        {sinReportes ? (
+          <EstadoSinReportes alReportarProblema={alPresionarReportar} />
+        ) : (
+          <>
+            <BannerReportarProblema alReportarProblema={alPresionarReportar} />
 
-        <Text className="mb-3 mt-7 text-xl font-bold text-civora-text">
-          En la residencial
-        </Text>
+            <Text className="mb-3 mt-7 text-xl font-bold text-civora-text">
+              En la residencial
+            </Text>
 
-        <FiltrosReportesResidencial
-          categoriaSeleccionada={categoriaSeleccionada}
-          estadoSeleccionado={estadoSeleccionado}
-          alSeleccionarCategoria={setCategoriaSeleccionada}
-          alSeleccionarEstado={setEstadoSeleccionado}
-        />
+            <FiltrosReportesResidencial
+              categoriaSeleccionada={categoriaSeleccionada}
+              estadoSeleccionado={estadoSeleccionado}
+              alSeleccionarCategoria={setCategoriaSeleccionada}
+              alSeleccionarEstado={setEstadoSeleccionado}
+            />
 
-        <View className="mt-5 flex-row flex-wrap gap-4">
-          {reportesFiltrados.length > 0 ? (
-            reportesFiltrados.map((reporte) => (
-              <View key={reporte.id} className="w-full md:w-[48.5%]">
-                <TarjetaResumenReporte
-                  reporte={reporte}
-                  alPresionar={alSeleccionarReporte}
-                />
-              </View>
-            ))
-          ) : (
-            <View className="w-full items-center rounded-2xl border border-civora-border bg-civora-card px-6 py-10">
-              <Text className="text-sm font-semibold text-civora-text">
-                No hay reportes con estos filtros
-              </Text>
-              <Text className="mt-1 text-center text-xs text-civora-muted">
-                Prueba cambiando la categoría o el estado seleccionado.
-              </Text>
+            <View className="mt-5 flex-row flex-wrap gap-4">
+              {cargando ? (
+                <View className="w-full items-center py-10">
+                  <ActivityIndicator color={ColoresCivora.primary} />
+                  <Text className="mt-3 text-xs text-civora-muted">Cargando reportes…</Text>
+                </View>
+              ) : error ? (
+                <View className="w-full gap-3 rounded-2xl border border-civora-border bg-civora-card px-6 py-6">
+                  <Text className="text-sm text-civora-text">{error}</Text>
+                  {alReintentar ? (
+                    <BotonPrincipal texto="Reintentar" onPress={alReintentar} />
+                  ) : null}
+                </View>
+              ) : reportesFiltrados.length > 0 ? (
+                reportesFiltrados.map((reporte) => (
+                  <View key={reporte.id} className="w-full md:w-[48.5%]">
+                    <TarjetaResumenReporte
+                      reporte={reporte}
+                      alPresionar={alSeleccionarReporte}
+                    />
+                  </View>
+                ))
+              ) : (
+                <View className="w-full items-center rounded-2xl border border-civora-border bg-civora-card px-6 py-10">
+                  <Text className="text-sm font-semibold text-civora-text">
+                    No hay reportes con estos filtros
+                  </Text>
+                  <Text className="mt-1 text-center text-xs text-civora-muted">
+                    Prueba cambiando la categoría o el estado seleccionado.
+                  </Text>
+                </View>
+              )}
             </View>
-          )}
-        </View>
+          </>
+        )}
       </ScrollView>
 
       {/* Navegación inferior en pantallas web estrechas */}
