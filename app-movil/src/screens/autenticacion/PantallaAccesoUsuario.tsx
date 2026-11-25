@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,7 +7,7 @@ import { FormularioInicioSesion } from '@/components/autenticacion/FormularioIni
 import { FormularioRegistroUsuario } from '@/components/autenticacion/FormularioRegistroUsuario';
 import type { OpcionPestana } from '@/components/ui/SelectorPestanas';
 import { ColoresCivora } from '@/constants/coloresCivora';
-import { useSesion } from '@/context/SesionContext';
+import { type OpcionesInicioSesion, useSesion } from '@/context/SesionContext';
 import type {
   DatosInicioSesion,
   DatosRegistroUsuario,
@@ -21,22 +21,44 @@ const OPCIONES_ACCESO: OpcionPestana<ModoAutenticacion>[] = [
 
 export function PantallaAccesoUsuario() {
   const [modoActual, setModoActual] = useState<ModoAutenticacion>('inicioSesion');
-  const { iniciarSesion } = useSesion();
+  const [enviando, setEnviando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { iniciarSesion, sesionRestaurada } = useSesion();
 
-  const manejarInicioSesion = (datos: DatosInicioSesion) => {
-    // TODO: Conectar inicio de sesión con src/services/
-    iniciarSesion(datos.correo);
-    router.replace('/inicio');
+  // Con la nube: si al abrir la app había una sesión guardada, entra directo.
+  useEffect(() => {
+    if (sesionRestaurada) router.replace('/inicio');
+  }, [sesionRestaurada]);
+
+  const cambiarModo = (modo: ModoAutenticacion) => {
+    setError(null);
+    setModoActual(modo);
   };
 
-  const manejarRegistro = (datos: DatosRegistroUsuario) => {
-    // TODO: Conectar registro de usuario con src/services/
-    iniciarSesion(datos.correo, {
+  const entrar = async (correo: string, opciones: OpcionesInicioSesion) => {
+    if (enviando) return;
+    setEnviando(true);
+    setError(null);
+    try {
+      await iniciarSesion(correo, opciones);
+      router.replace('/inicio');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'No pudimos entrar. Inténtalo de nuevo.');
+    } finally {
+      setEnviando(false);
+    }
+  };
+
+  const manejarInicioSesion = (datos: DatosInicioSesion) =>
+    void entrar(datos.correo, { contrasena: datos.contrasena });
+
+  const manejarRegistro = (datos: DatosRegistroUsuario) =>
+    void entrar(datos.correo, {
+      crearCuenta: true,
+      contrasena: datos.contrasena,
       nombre: datos.nombre,
       pasajePoligono: datos.direccionResidencial,
     });
-    router.replace('/inicio');
-  };
 
   return (
     <SafeAreaView
@@ -48,14 +70,18 @@ export function PantallaAccesoUsuario() {
         {modoActual === 'inicioSesion' ? (
           <FormularioInicioSesion
             opcionesModo={OPCIONES_ACCESO}
-            alCambiarModo={setModoActual}
+            alCambiarModo={cambiarModo}
             alEnviar={manejarInicioSesion}
+            enviando={enviando}
+            error={error}
           />
         ) : (
           <FormularioRegistroUsuario
             opcionesModo={OPCIONES_ACCESO}
-            alCambiarModo={setModoActual}
+            alCambiarModo={cambiarModo}
             alEnviar={manejarRegistro}
+            enviando={enviando}
+            error={error}
           />
         )}
       </KeyboardAvoidingView>

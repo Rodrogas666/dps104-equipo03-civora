@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { EncabezadoAccesoCivora } from '@/components/autenticacion/EncabezadoAccesoCivora';
@@ -15,12 +15,18 @@ export interface FormularioInicioSesionProps {
   opcionesModo: OpcionPestana<ModoAutenticacion>[];
   alCambiarModo: (modo: ModoAutenticacion) => void;
   alEnviar?: (datos: DatosInicioSesion) => void;
+  /** true mientras se espera la respuesta: bloquea el botón. */
+  enviando?: boolean;
+  /** Mensaje de error visible para el usuario. */
+  error?: string | null;
 }
 
 export function FormularioInicioSesion({
   opcionesModo,
   alCambiarModo,
   alEnviar,
+  enviando = false,
+  error = null,
 }: FormularioInicioSesionProps) {
   const insets = useSafeAreaInsets();
   const referenciaContrasena = useRef<ReferenciaCampoTexto>(null);
@@ -28,6 +34,7 @@ export function FormularioInicioSesion({
   const [contrasena, setContrasena] = useState('');
 
   const manejarEnvio = () => {
+    if (enviando) return;
     alEnviar?.({ correo: correo.trim(), contrasena });
   };
 
@@ -79,7 +86,12 @@ export function FormularioInicioSesion({
       <View
         className="border-t border-civora-border/60 bg-civora-card px-6 pt-4"
         style={{ paddingBottom: Math.max(insets.bottom, 20) }}>
-        <BotonPrincipal texto="Entrar" onPress={manejarEnvio} />
+        {error ? <Text className="mb-3 text-sm font-semibold text-red-700">{error}</Text> : null}
+        <BotonPrincipal
+          texto={enviando ? 'Entrando…' : 'Entrar'}
+          disabled={enviando}
+          onPress={manejarEnvio}
+        />
       </View>
     </View>
   );

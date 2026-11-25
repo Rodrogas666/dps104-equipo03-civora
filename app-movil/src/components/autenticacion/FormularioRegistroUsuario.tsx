@@ -15,12 +15,18 @@ export interface FormularioRegistroUsuarioProps {
   opcionesModo: OpcionPestana<ModoAutenticacion>[];
   alCambiarModo: (modo: ModoAutenticacion) => void;
   alEnviar?: (datos: DatosRegistroUsuario) => void;
+  /** true mientras se espera la respuesta: bloquea el botón. */
+  enviando?: boolean;
+  /** Mensaje de error visible para el usuario. */
+  error?: string | null;
 }
 
 export function FormularioRegistroUsuario({
   opcionesModo,
   alCambiarModo,
   alEnviar,
+  enviando = false,
+  error = null,
 }: FormularioRegistroUsuarioProps) {
   const insets = useSafeAreaInsets();
   const referenciaCorreo = useRef<ReferenciaCampoTexto>(null);
@@ -33,6 +39,7 @@ export function FormularioRegistroUsuario({
   const [direccionResidencial, setDireccionResidencial] = useState('');
 
   const manejarEnvio = () => {
+    if (enviando) return;
     alEnviar?.({
       nombre: nombre.trim(),
       correo: correo.trim(),
@@ -116,7 +123,12 @@ export function FormularioRegistroUsuario({
       <View
         className="border-t border-civora-border/60 bg-civora-card px-6 pt-4"
         style={{ paddingBottom: Math.max(insets.bottom, 20) }}>
-        <BotonPrincipal texto="Crear cuenta" onPress={manejarEnvio} />
+        {error ? <Text className="mb-3 text-sm font-semibold text-red-700">{error}</Text> : null}
+        <BotonPrincipal
+          texto={enviando ? 'Creando cuenta…' : 'Crear cuenta'}
+          disabled={enviando}
+          onPress={manejarEnvio}
+        />
       </View>
     </View>
   );

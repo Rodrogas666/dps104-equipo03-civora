@@ -8,6 +8,7 @@ import 'react-native-url-polyfill/auto';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { AppState, Platform } from 'react-native';
 
 export const USAR_NUBE = process.env.EXPO_PUBLIC_USAR_NUBE === 'true';
 
@@ -34,6 +35,14 @@ function crearCliente(): SupabaseClient | null {
 }
 
 export const supabase = crearCliente();
+
+// Renueva el token solo mientras la app está en primer plano (recomendación de Supabase para RN).
+if (supabase && Platform.OS !== 'web') {
+  AppState.addEventListener('change', (estado) => {
+    if (estado === 'active') void supabase.auth.startAutoRefresh();
+    else void supabase.auth.stopAutoRefresh();
+  });
+}
 
 /** Devuelve el cliente o lanza un error claro si se usa sin activar la nube. */
 export function obtenerSupabase(): SupabaseClient {

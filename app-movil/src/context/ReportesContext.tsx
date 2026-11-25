@@ -8,6 +8,8 @@ import {
   useState,
 } from 'react';
 
+import { useSesion } from '@/context/SesionContext';
+import { USAR_NUBE } from '@/lib/supabase';
 import {
   actualizarEstado,
   crearReporte,
@@ -37,10 +39,25 @@ interface ReportesContextValor {
 const ReportesContext = createContext<ReportesContextValor | null>(null);
 
 export function ReportesProvider({ children }: { children: ReactNode }) {
+  const { idUsuario } = useSesion();
+  // En memoria se carga una sola vez. Con la nube se carga al haber sesión y se
+  // vuelve a cargar si cambia el usuario (null = sin sesión, no hay nada que leer).
+  const claveCarga = USAR_NUBE ? idUsuario : 'memoria';
+
   const [reportes, setReportes] = useState<ReporteVecinal[]>([]);
-  const [cargando, setCargando] = useState(true);
+  const [cargando, setCargando] = useState(claveCarga !== null);
   const [error, setError] = useState<string | null>(null);
   const [ultimoCreado, setUltimoCreado] = useState<ReporteVecinal | null>(null);
+  const [claveAnterior, setClaveAnterior] = useState(claveCarga);
+
+  // Cambió el usuario: se descartan los datos del anterior antes de pintar.
+  if (claveAnterior !== claveCarga) {
+    setClaveAnterior(claveCarga);
+    setReportes([]);
+    setError(null);
+    setUltimoCreado(null);
+    setCargando(claveCarga !== null);
+  }
 
   const recargar = useCallback(async () => {
     setCargando(true);
@@ -55,6 +72,7 @@ export function ReportesProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
+    if (claveCarga === null) return;
     let cancelado = false;
     void listarReportes()
       .then((lista) => {
@@ -69,7 +87,7 @@ export function ReportesProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelado = true;
     };
-  }, []);
+  }, [claveCarga]);
 
   const crear = useCallback(async (datos: DatosNuevoReporte) => {
     const nuevo = await crearReporte(datos);
