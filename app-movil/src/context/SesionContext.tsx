@@ -47,8 +47,8 @@ interface SesionValor {
 const SesionContext = createContext<SesionValor | null>(null);
 
 const DATOS_POR_DEFECTO = {
-  nombre: 'Ana Rivas',
-  correo: 'ana.rivas@correo.com',
+  nombre: 'Vecino',
+  correo: 'vecino@correo.com',
   pasajePoligono: 'Pasaje 5, Polígono C',
   residencial: 'Residencial Las Palmas',
 } as const;
